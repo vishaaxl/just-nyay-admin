@@ -143,6 +143,8 @@ const SectionHeading = styled.h2`
 `;
 
 const TableWrapper = styled.section`
+  overflow: scroll;
+
   margin: 2rem 0;
   padding: 2rem 1rem;
 
@@ -153,6 +155,10 @@ const TableWrapper = styled.section`
   .pagination {
     margin: 4rem 0;
     text-align: center;
+
+    button {
+      margin-bottom: 1rem;
+    }
   }
 `;
 
