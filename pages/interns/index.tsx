@@ -46,6 +46,7 @@ export default function Home({ users }: Props) {
         tableData={JSON.parse(users)}
         tableColumns={usersColumn}
         tableName="All Interns"
+        path="interns"
       />
     </>
   );
