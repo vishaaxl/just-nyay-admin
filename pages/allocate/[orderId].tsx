@@ -1,4 +1,4 @@
-import OrdersTable from "components/Tables/OrdersTable";
+import LawyersTable from "components/Tables/LawyersTable";
 import { db } from "firebase.config";
 import { collection, DocumentData, getDocs } from "firebase/firestore";
 import { GetServerSideProps } from "next";
@@ -6,6 +6,7 @@ import Head from "next/head";
 
 interface Props {
   users: string;
+  orderId: string;
 }
 
 export const lawyersColumn = [
@@ -35,7 +36,7 @@ export const lawyersColumn = [
   },
 ];
 
-export default function Home({ users }: Props) {
+export default function Home({ users, orderId }: Props) {
   return (
     <>
       <Head>
@@ -44,17 +45,18 @@ export default function Home({ users }: Props) {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <OrdersTable
+      <LawyersTable
         tableData={JSON.parse(users)}
         tableColumns={lawyersColumn}
-        tableName="All Lawyers"
-        path="lawyers"
+        tableName="Select Lawyer"
+        orderId={orderId}
       />
     </>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
+  const { orderId } = context.query;
   const usersRef = collection(db, "lawyers");
 
   const usersSnap = await getDocs(usersRef);
@@ -71,6 +73,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   return {
     props: {
       users: JSON.stringify(users),
+      orderId,
     },
   };
 };

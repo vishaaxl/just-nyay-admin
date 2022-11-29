@@ -6,6 +6,7 @@ interface Props {
   figure: string;
   increase: number;
   icon: any;
+  onClick: () => void;
 }
 
 const SalesCard: React.FC<Props> = ({
@@ -14,9 +15,10 @@ const SalesCard: React.FC<Props> = ({
   increase,
   background,
   icon,
+  onClick,
 }) => {
   return (
-    <CardWrapper style={{ background: background }}>
+    <CardWrapper style={{ background: background }} onClick={onClick}>
       <div className="content">
         <span className="heading">{title}</span>
         <span>{figure}</span>

@@ -4,6 +4,7 @@ import { db } from "firebase.config";
 import { collection, DocumentData, getDocs } from "firebase/firestore";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
+import { useRouter } from "next/router";
 import {
   AiOutlineBarChart,
   AiOutlineLineChart,
@@ -12,10 +13,10 @@ import {
 import styled from "styled-components";
 
 interface Props {
-  users: DocumentData;
-  lawyers: DocumentData;
-  interns: DocumentData;
-  orders: DocumentData;
+  users: string;
+  lawyers: string;
+  interns: string;
+  orders: string;
 }
 
 const CardsWrapper = styled.div`
@@ -28,6 +29,10 @@ const CardsWrapper = styled.div`
 `;
 
 const orderColumn = [
+  {
+    Header: "Order ID",
+    accessor: "id" as const, // accessor is the "key" in the data
+  },
   {
     Header: "Plan",
     accessor: "plan" as const, // accessor is the "key" in the data
@@ -51,36 +56,42 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
     {
       id: 1,
       title: "Total Orders",
-      figure: `${orders.length} orders`,
-      increase: orders.length * 10,
+      figure: `${JSON.parse(orders).length} orders`,
+      increase: JSON.parse(orders).length * 10,
       background: "#98BDFF",
       icon: <AiOutlineBarChart style={{ fontSize: "2.5rem" }} />,
+      link: "/orders",
     },
     {
       id: 2,
       title: "Total Lawyers",
-      figure: `${lawyers.length} users`,
-      increase: lawyers.length * 10,
+      figure: `${JSON.parse(lawyers).length} users`,
+      increase: JSON.parse(orders).length * 10,
       background: "#F3797E",
       icon: <AiOutlineLineChart style={{ fontSize: "2.5rem" }} />,
+      link: "/lawyers",
     },
     {
       id: 3,
       title: "Total Users",
-      figure: `${users.length} users`,
-      increase: users.length * 10,
+      figure: `${JSON.parse(users).length} users`,
+      increase: JSON.parse(orders).length * 10,
       background: "#7978E9",
       icon: <AiOutlineUserAdd style={{ fontSize: "2.5rem" }} />,
+      link: "/customers",
     },
     {
       id: 4,
       title: "Total Inters",
-      figure: `${interns.length} interns`,
-      increase: interns.length * 10,
+      figure: `${JSON.parse(interns).length} interns`,
+      increase: JSON.parse(orders).length * 10,
       background: "#7DA0FA",
       icon: <AiOutlineUserAdd style={{ fontSize: "2.5rem" }} />,
+      link: "/interns",
     },
   ];
+
+  const router = useRouter();
 
   return (
     <>
@@ -92,6 +103,7 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
       <CardsWrapper>
         {cardsData.map((card) => (
           <SalesCard
+            onClick={() => router.push(card.link)}
             key={card.id}
             title={card.title}
             icon={card.icon}
@@ -103,9 +115,10 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
       </CardsWrapper>
 
       <OrdersTable
-        tableData={orders}
+        tableData={JSON.parse(orders)}
         tableColumns={orderColumn}
         tableName="Recent Orders"
+        path="orders"
       />
     </>
   );
@@ -157,10 +170,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      users,
-      lawyers,
-      interns,
-      orders,
+      users: JSON.stringify(users),
+      lawyers: JSON.stringify(lawyers),
+      interns: JSON.stringify(interns),
+      orders: JSON.stringify(orders),
     },
   };
 };

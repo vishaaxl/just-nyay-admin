@@ -7,7 +7,7 @@ import Head from "next/head";
 import styled from "styled-components";
 
 interface Props {
-  orders: DocumentData;
+  orders: string;
 }
 
 const CardsWrapper = styled.div`
@@ -20,6 +20,10 @@ const CardsWrapper = styled.div`
 `;
 
 const orderColumn = [
+  {
+    Header: "Order ID",
+    accessor: "id" as const, // accessor is the "key" in the data
+  },
   {
     Header: "Plan",
     accessor: "plan" as const, // accessor is the "key" in the data
@@ -48,9 +52,10 @@ export default function Home({ orders }: Props) {
       </Head>
 
       <OrdersTable
-        tableData={orders}
+        tableData={JSON.parse(orders)}
         tableColumns={orderColumn}
         tableName="All Orders"
+        path="orders"
       />
     </>
   );
@@ -72,7 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      orders,
+      orders: JSON.stringify(orders),
     },
   };
 };

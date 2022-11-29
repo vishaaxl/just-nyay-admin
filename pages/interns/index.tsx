@@ -7,10 +7,14 @@ import Head from "next/head";
 import styled from "styled-components";
 
 interface Props {
-  users: DocumentData;
+  users: string;
 }
 
 const usersColumn = [
+  {
+    Header: "Intern ID",
+    accessor: "id" as const, // accessor is the "key" in the data
+  },
   {
     Header: "Name",
     accessor: "firstname" as const, // accessor is the "key" in the data
@@ -39,7 +43,7 @@ export default function Home({ users }: Props) {
       </Head>
 
       <OrdersTable
-        tableData={users}
+        tableData={JSON.parse(users)}
         tableColumns={usersColumn}
         tableName="All Interns"
       />
@@ -63,7 +67,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      users,
+      users: JSON.stringify(users),
     },
   };
 };

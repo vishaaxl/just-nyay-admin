@@ -1,24 +1,32 @@
-import { DocumentData } from "firebase/firestore";
+import {
+  doc,
+  DocumentData,
+  serverTimestamp,
+  updateDoc,
+} from "firebase/firestore";
+import { useState } from "react";
 import { useRouter } from "next/router";
 import { useMemo } from "react";
 import { useGlobalFilter, usePagination, useTable } from "react-table";
 import styled from "styled-components";
 import GlobalFilter from "./Filter";
+import { db } from "firebase.config";
 
 interface Props {
   tableData: any[];
   tableColumns: any[];
   tableName: string;
-  path: string;
+  orderId: string;
 }
 
-const OrdersTable: React.FC<Props> = ({
+const Lawyers: React.FC<Props> = ({
   tableData,
   tableColumns,
   tableName,
-  path,
+  orderId,
 }) => {
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const columns = useMemo(() => tableColumns, [tableColumns]);
   const data = useMemo(() => tableData as any[], [tableData]);
 
@@ -47,17 +55,35 @@ const OrdersTable: React.FC<Props> = ({
     state: { pageIndex, pageSize, globalFilter },
   } = tableInstance;
 
-  const handleRedirect = (pathName: string, row: any) => {
+  const handleRedirect = async (row: any) => {
+    if (loading) {
+      return;
+    }
+    setLoading(true);
     const { id } = row;
 
-    router.push(`/${pathName}/${id}`);
+    const docRef = doc(db, "orders", orderId);
+    const data = {
+      lawyer: id,
+      lawyerAssignedAt: serverTimestamp(),
+    };
+
+    await updateDoc(docRef, data)
+      .then(() => {
+        setLoading(false);
+        router.back();
+      })
+      .catch((err) => {
+        console.log(err);
+        setLoading(false);
+      });
   };
 
   return (
     <TableWrapper>
       <SectionHeading>{tableName}</SectionHeading>
       <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
-      <Table {...getTableProps()}>
+      <Table {...getTableProps()} style={{ opacity: loading ? 0.5 : 1 }}>
         <thead>
           {headerGroups.map((headerGroup) => {
             const { key, ...restHeaderGroupProps } =
@@ -84,7 +110,7 @@ const OrdersTable: React.FC<Props> = ({
               <tr
                 key={key}
                 {...restRowProps}
-                onClick={() => handleRedirect(path, row.original)}
+                onClick={() => handleRedirect(row.original)}
               >
                 {row.cells.map((cell) => {
                   const { key, ...restCellProps } = cell.getCellProps();
@@ -207,4 +233,4 @@ const Table = styled.table`
   }
 `;
 
-export default OrdersTable;
+export default Lawyers;
