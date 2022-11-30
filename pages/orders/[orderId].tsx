@@ -158,7 +158,12 @@ const Total = styled.div`
 
 const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
   const router = useRouter();
-  console.log(JSON.parse(lawyer));
+  const planPrice = {
+    15: "599",
+    30: "1099",
+    45: "1599",
+    60: "2099",
+  };
 
   return (
     <main>
@@ -206,37 +211,45 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
             <span>{JSON.parse(user).phoneNumber}</span>
           </div>
         </InvoiceDetails>
-        <InvoiceDetails>
-          <div className="invoice-details">
-            <span className="small">Assigned Date:</span>
-            <span className="big">
-              {moment(JSON.parse(order).lawyerAssignedAt.seconds * 1000).format(
-                "MMM Do YY"
-              )}
-            </span>
-          </div>
-          <div className="user-details">
-            <div className="small">Lawyer</div>
-            <div className="big">
-              {JSON.parse(lawyer).firstname} {JSON.parse(lawyer).lastname}
+        {lawyer && (
+          <InvoiceDetails>
+            <div className="invoice-details">
+              <span className="small">Assigned Date:</span>
+              <span className="big">
+                {moment(
+                  JSON.parse(order).lawyerAssignedAt?.seconds * 1000
+                ).format("MMM Do YY")}
+              </span>
             </div>
-            <span>{JSON.parse(lawyer).city}</span>
-            <span>{JSON.parse(lawyer).email}</span>
-            <span>{JSON.parse(lawyer).phoneNumber}</span>
 
-            <span
-              className="redirect"
-              onClick={() => router.push(`/lawyers/${JSON.parse(lawyer).id}`)}
-            >
-              View Details
-              <BsCaretRightFill className="icon" />
-            </span>
-          </div>
-        </InvoiceDetails>
+            <div className="user-details">
+              <div className="small">Lawyer</div>
+              <div className="big">
+                {JSON.parse(lawyer).firstname} {JSON.parse(lawyer).lastname}
+              </div>
+              <span>{JSON.parse(lawyer).city}</span>
+              <span>{JSON.parse(lawyer).email}</span>
+              <span>{JSON.parse(lawyer).phoneNumber}</span>
+
+              <span
+                className="redirect"
+                onClick={() => router.push(`/lawyers/${JSON.parse(lawyer).id}`)}
+              >
+                View Details
+                <BsCaretRightFill className="icon" />
+              </span>
+            </div>
+          </InvoiceDetails>
+        )}
       </Content>
       <Total>
         <span>Amount Paid</span>
-        <span> &#x20b9; 600</span>
+        <span>
+          {" "}
+          &#x20b9; {
+            planPrice[JSON.parse(order).plan as keyof typeof planPrice]
+          }{" "}
+        </span>
       </Total>
     </main>
   );
@@ -252,15 +265,24 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const userRef = doc(db, "users", orderSnap.data()?.user as string);
   const userSnap = await getDoc(userRef);
 
-  // get the assigned Lawyer
-  const lawyerRef = doc(db, "lawyers", orderSnap.data()?.lawyer);
-  const lawyerSnap = await getDoc(lawyerRef);
+  // // get the assigned Lawyer
+  if (orderSnap.data()?.lawyer) {
+    const lawyerRef = doc(db, "lawyers", orderSnap?.data()?.lawyer);
+    const lawyerSnap = await getDoc(lawyerRef);
+    return {
+      props: {
+        order: JSON.stringify({ ...orderSnap.data(), id: orderSnap.id }),
+        user: JSON.stringify({ ...userSnap.data(), id: userSnap.id }),
+        lawyer: JSON.stringify({ ...lawyerSnap.data(), id: lawyerSnap.id }),
+      },
+    };
+  }
 
   return {
     props: {
       order: JSON.stringify({ ...orderSnap.data(), id: orderSnap.id }),
       user: JSON.stringify({ ...userSnap.data(), id: userSnap.id }),
-      lawyer: JSON.stringify({ ...lawyerSnap.data(), id: lawyerSnap.id }),
+      lawyer: null,
     },
   };
 };
