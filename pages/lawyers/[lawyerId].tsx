@@ -24,6 +24,7 @@ import { VscVerified, VscUnverified } from "react-icons/vsc";
 import moment from "moment";
 import { useState } from "react";
 import OrdersTable from "components/Tables/OrdersTable";
+import { generateUid } from "utils/main";
 
 interface Props {
   user: string;
@@ -98,7 +99,12 @@ const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
           <span className="id">
             {JSON.parse(user).firstname} {JSON.parse(user).lastname}
           </span>
-          <span className="problemType">{JSON.parse(user).id}</span>
+          <span className="problemType">
+            {generateUid(
+              JSON.parse(user).createdAt.seconds * 1000,
+              JSON.parse(user).id
+            )}
+          </span>
         </div>
 
         <div className="block-two">

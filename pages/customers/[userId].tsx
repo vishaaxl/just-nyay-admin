@@ -14,6 +14,7 @@ import { BsCaretLeftFill, BsDot } from "react-icons/bs";
 import styled from "styled-components";
 import moment from "moment";
 import OrdersTable from "components/Tables/OrdersTable";
+import { generateUid } from "utils/main";
 
 interface Props {
   user: string;
@@ -142,7 +143,7 @@ export const Total = styled.div`
 export const orderColumn = [
   {
     Header: "Order ID",
-    accessor: "id" as const, // accessor is the "key" in the data
+    accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
     Header: "Plan",
@@ -202,7 +203,12 @@ const UserDetails: React.FC<Props> = ({ user, orders }) => {
           <span className="id">
             {JSON.parse(user).firstname} {JSON.parse(user).lastname}
           </span>
-          <span className="problemType">{JSON.parse(user).id}</span>
+          <span className="problemType">
+            {generateUid(
+              JSON.parse(user).createdAt.seconds * 1000,
+              JSON.parse(user).id
+            )}
+          </span>
         </div>
 
         <InvoiceDetails>
@@ -231,7 +237,10 @@ const UserDetails: React.FC<Props> = ({ user, orders }) => {
       </Total>
 
       <OrdersTable
-        tableData={JSON.parse(orders)}
+        tableData={JSON.parse(orders).map((order: any) => ({
+          ...order,
+          uid: generateUid(order.createdAt.seconds * 1000, order.id),
+        }))}
         tableColumns={orderColumn}
         tableName={`Orders From ${JSON.parse(user).firstname}`}
         path="orders"

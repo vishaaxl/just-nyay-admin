@@ -11,6 +11,7 @@ import {
   AiOutlineUserAdd,
 } from "react-icons/ai";
 import styled from "styled-components";
+import { generateUid } from "utils/main";
 
 interface Props {
   users: string;
@@ -31,7 +32,7 @@ const CardsWrapper = styled.div`
 const orderColumn = [
   {
     Header: "Order ID",
-    accessor: "id" as const, // accessor is the "key" in the data
+    accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
     Header: "Plan",
@@ -115,7 +116,10 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
       </CardsWrapper>
 
       <OrdersTable
-        tableData={JSON.parse(orders)}
+        tableData={JSON.parse(orders).map((order: any) => ({
+          ...order,
+          uid: generateUid(order.createdAt.seconds * 1000, order.id),
+        }))}
         tableColumns={orderColumn}
         tableName="Recent Orders"
         path="orders"

@@ -5,6 +5,7 @@ import { GetServerSideProps } from "next";
 import Head from "next/head";
 
 import styled from "styled-components";
+import { generateUid } from "utils/main";
 
 interface Props {
   users: string;
@@ -43,7 +44,10 @@ export default function Home({ users }: Props) {
       </Head>
 
       <OrdersTable
-        tableData={JSON.parse(users)}
+        tableData={JSON.parse(users).map((order: any) => ({
+          ...order,
+          uid: generateUid(order.createdAt.seconds * 1000, order.id),
+        }))}
         tableColumns={usersColumn}
         tableName="All Customers"
         path="customers"

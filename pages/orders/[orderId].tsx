@@ -14,6 +14,7 @@ import moment from "moment";
 import { useState } from "react";
 import OrdersTable from "components/Tables/OrdersTable";
 import { lawyersColumn } from "pages/lawyers";
+import { generateUid } from "utils/main";
 
 interface Props {
   order: string;
@@ -180,7 +181,12 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
 
       <Content>
         <div className="block-one">
-          <span className="id">{JSON.parse(order).id}</span>
+          <span className="id">
+            {generateUid(
+              JSON.parse(order).createdAt.seconds * 1000,
+              JSON.parse(order).id
+            )}
+          </span>
           <span className="problemType">{JSON.parse(order).problemType}</span>
         </div>
 

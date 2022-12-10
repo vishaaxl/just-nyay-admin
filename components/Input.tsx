@@ -11,6 +11,8 @@ interface Props {
   value?: string;
   children?: React.ReactNode;
   defaultValue?: string;
+  min?: any;
+  max?: any;
 }
 
 const Input: React.FC<Props> = ({
@@ -21,12 +23,18 @@ const Input: React.FC<Props> = ({
   component,
   rows,
   children,
+  min,
+  max,
+  defaultValue,
 }) => {
   const [field, meta] = useField(name);
   return (
     <InputBlock className="input-block custom-input">
       <label htmlFor={name}>{placeholder}</label>
       <Field
+        defaultValue={defaultValue || null}
+        min={min || null}
+        max={max || null}
         id={name}
         type={type || "text"}
         disabled={disabled}

@@ -3,6 +3,7 @@ import { db } from "firebase.config";
 import { collection, DocumentData, getDocs } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+import { generateUid } from "utils/main";
 
 interface Props {
   users: string;
@@ -11,7 +12,7 @@ interface Props {
 export const lawyersColumn = [
   {
     Header: "Lawyer ID",
-    accessor: "id" as const, // accessor is the "key" in the data
+    accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
     Header: "Name",
@@ -45,7 +46,10 @@ export default function Home({ users }: Props) {
       </Head>
 
       <OrdersTable
-        tableData={JSON.parse(users)}
+        tableData={JSON.parse(users).map((order: any) => ({
+          ...order,
+          uid: generateUid(order.createdAt.seconds * 1000, order.id),
+        }))}
         tableColumns={lawyersColumn}
         tableName="All Lawyers"
         path="lawyers"

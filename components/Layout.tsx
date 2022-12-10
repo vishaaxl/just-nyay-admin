@@ -293,6 +293,12 @@ const options = [
     icon: <MdManageAccounts className="icon" />,
     link: "/interns",
   },
+  {
+    id: 5,
+    title: "Bill Order",
+    icon: <MdPostAdd className="icon" />,
+    link: "/bill",
+  },
 ];
 
 export default Layout;
