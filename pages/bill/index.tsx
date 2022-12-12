@@ -18,6 +18,7 @@ import {
 } from "firebase/firestore";
 import { db } from "firebase.config";
 import { toast } from "react-toastify";
+import { useRouter } from "next/router";
 
 const Container = styled.div`
   padding: 2rem 1rem;
@@ -90,6 +91,8 @@ const price_array = [
 
 export default function Home() {
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+
   return (
     <Container>
       <h2>Custom Bill</h2>
@@ -151,6 +154,8 @@ export default function Home() {
               createdAt: serverTimestamp(),
             })
               .then((doc) => {
+                router.push(`/bill/${doc.id}`);
+
                 // redirect to continue payment and set payment true on successfull transaction
                 toast("Added order successfully", {
                   type: "success",
@@ -196,6 +201,7 @@ export default function Home() {
                 createdAt: serverTimestamp(),
               })
                 .then((doc) => {
+                  router.push(`/bill/${doc.id}`);
                   // redirect to continue payment and set payment true on successfull transaction
                   toast("Added order successfully", {
                     type: "success",

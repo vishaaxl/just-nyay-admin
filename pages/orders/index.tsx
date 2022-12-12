@@ -23,7 +23,7 @@ const CardsWrapper = styled.div`
 const orderColumn = [
   {
     Header: "Order ID",
-    accessor: "id" as const, // accessor is the "key" in the data
+    accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
     Header: "Plan",

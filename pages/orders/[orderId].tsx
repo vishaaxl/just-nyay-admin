@@ -78,6 +78,15 @@ const Content = styled.div`
     opacity: 0.6;
   }
 
+  .block-one {
+    .link {
+      cursor: pointer;
+      color: ${({ theme }) => theme.primaryAccent};
+      margin-top: 0.5rem;
+      text-decoration: underline;
+    }
+  }
+
   .block-two {
     margin-top: 2.5rem;
     span {
@@ -188,6 +197,12 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
             )}
           </span>
           <span className="problemType">{JSON.parse(order).problemType}</span>
+          <span
+            className="link"
+            onClick={() => router.push(`/bill/${JSON.parse(order).id}`)}
+          >
+            Generate Bill
+          </span>
         </div>
 
         <div className="block-two">
