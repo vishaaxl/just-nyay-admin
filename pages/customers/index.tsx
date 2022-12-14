@@ -1,6 +1,12 @@
 import OrdersTable from "components/Tables/OrdersTable";
 import { db } from "firebase.config";
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
@@ -14,7 +20,7 @@ interface Props {
 const usersColumn = [
   {
     Header: "User ID",
-    accessor: "id" as const, // accessor is the "key" in the data
+    accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
     Header: "Name",
@@ -57,7 +63,7 @@ export default function Home({ users }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const usersRef = collection(db, "users");
+  const usersRef = query(collection(db, "users"), orderBy("createdAt", "desc"));
 
   const usersSnap = await getDocs(usersRef);
 

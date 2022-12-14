@@ -183,7 +183,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
                 <span>Total</span>
               </div>
               <div className="row">
-                <span>Legal Consultation</span>
+                <span>Registration Fee</span>
                 <span>1</span>
                 <span>Rs. {prices[order.plan as keyof typeof prices]}</span>
                 <span>Rs. {prices[order.plan as keyof typeof prices]}</span>

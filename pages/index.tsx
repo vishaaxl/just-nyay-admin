@@ -1,7 +1,13 @@
 import SalesCard from "components/Card";
 import OrdersTable from "components/Tables/OrdersTable";
 import { db } from "firebase.config";
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  orderBy,
+  query,
+} from "firebase/firestore";
 import { GetServerSideProps, NextPage } from "next";
 import Head from "next/head";
 import { useRouter } from "next/router";
@@ -129,10 +135,19 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const userRef = collection(db, "users");
-  const lawyersRef = collection(db, "lawyers");
-  const internsRef = collection(db, "interns");
-  const ordersRef = collection(db, "orders");
+  const userRef = query(collection(db, "users"), orderBy("createdAt", "desc"));
+  const lawyersRef = query(
+    collection(db, "lawyers"),
+    orderBy("createdAt", "desc")
+  );
+  const internsRef = query(
+    collection(db, "interns"),
+    orderBy("createdAt", "desc")
+  );
+  const ordersRef = query(
+    collection(db, "orders"),
+    orderBy("createdAt", "desc")
+  );
 
   const userSnap = await getDocs(userRef);
   const lawyersSnap = await getDocs(lawyersRef);

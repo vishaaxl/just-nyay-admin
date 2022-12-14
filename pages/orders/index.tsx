@@ -1,6 +1,12 @@
 import OrdersTable from "components/Tables/OrdersTable";
 import { db } from "firebase.config";
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+  collection,
+  DocumentData,
+  getDocs,
+  query,
+  orderBy,
+} from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
@@ -66,7 +72,10 @@ export default function Home({ orders }: Props) {
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const ordersRef = collection(db, "orders");
+  const ordersRef = query(
+    collection(db, "orders"),
+    orderBy("createdAt", "desc")
+  );
 
   const ordersSnap = await getDocs(ordersRef);
 
