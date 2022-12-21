@@ -97,17 +97,18 @@ export default function Home() {
     <Container>
       <h2>Custom Bill</h2>
       <Formik
+        enableReinitialize
         initialValues={{
           firstname: "",
           lastname: "",
           phoneNumber: "",
           city: "",
           email: "",
-          problemType: "",
-          language: "",
-          plan: "",
+          problemType: "Criminal / Property",
+          language: "hindi",
+          plan: "15",
           date: "",
-          time: "",
+          time: "9-10",
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().required("Required"),
