@@ -120,9 +120,9 @@ const Button = styled.div`
 const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
   const invoiceRef = useRef<HTMLDivElement | string>("undefined");
 
-  const generatePdf = () => {
+  const generatePdf = async () => {
     let doc = new jsPDF("p", "pt", "a4");
-    doc.html(invoiceRef.current, {
+    await doc.html(invoiceRef.current, {
       callback: (pdf) => {
         // @ts-ignore
         let pageCount = doc.internal.getNumberOfPages();
