@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRef } from "react";
 
 import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 import { DocumentData } from "firebase/firestore";
 
 import moment from "moment";
@@ -120,15 +121,13 @@ const Button = styled.div`
 const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
   const invoiceRef = useRef<HTMLDivElement | string>("undefined");
 
-  const generatePdf = async () => {
-    let doc = new jsPDF("p", "pt", "a4");
-    await doc.html(invoiceRef.current, {
-      callback: (pdf) => {
-        // @ts-ignore
-        let pageCount = doc.internal.getNumberOfPages();
-        pdf.deletePage(pageCount);
-        pdf.save(generateUid(order.createdAt?.seconds * 1000, order.id));
-      },
+  const generatePdf = () => {
+    // @ts-ignore
+    html2canvas(invoiceRef.current).then((canvas) => {
+      const img = canvas.toDataURL("image/png");
+      const pdf = new jsPDF("p", "pt", "a4");
+      pdf.addImage(img, "JPEG", 0, 0, 595, 842);
+      pdf.save(generateUid(order.createdAt?.seconds * 1000, order.id));
     });
   };
 

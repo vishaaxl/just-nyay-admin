@@ -247,9 +247,7 @@ export default function Home() {
                 name="problemType"
                 component="select"
               >
-                <option value="DEFAULT" disabled>
-                  Select Type
-                </option>
+                <option disabled>Select Type</option>
                 <option value="Criminal / Property">Criminal / Property</option>
                 <option value="Personal/ Family">Personal/ Family</option>
                 <option value="Corporate Law">Corporate Law</option>
@@ -257,17 +255,13 @@ export default function Home() {
                 <option value="others">others</option>
               </Input>
               <Input placeholder="Language" name="language" component="select">
-                <option value="DEFAULT" disabled>
-                  Select Language
-                </option>
+                <option disabled>Select Language</option>
                 <option value="hindi">Hindi</option>
                 <option value="english">English</option>
               </Input>
             </TwoColumn>
             <Input placeholder="Plan" name="plan" component="select">
-              <option value="DEFAULT" disabled>
-                Select Plan
-              </option>
+              <option disabled>Select Plan</option>
               {price_array.map((e) => (
                 <option key={e.id} value={e.title}>
                   {e.title} minutes / Rs.{e.price}
@@ -282,9 +276,7 @@ export default function Home() {
                 min={new Date().toISOString().split("T")[0]}
               />
               <Input name="time" placeholder="Time" component="select">
-                <option value="DEFAULT" disabled>
-                  Choose schedule
-                </option>
+                <option disabled>Choose schedule</option>
                 <option value="9-10">9 - 10</option>
                 <option value="10-11">10 - 11</option>
                 <option value="11-12">11 - 12</option>

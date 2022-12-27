@@ -32,7 +32,6 @@ const Input: React.FC<Props> = ({
     <InputBlock className="input-block custom-input">
       <label htmlFor={name}>{placeholder}</label>
       <Field
-        defaultValue={defaultValue || null}
         min={min || null}
         max={max || null}
         id={name}
