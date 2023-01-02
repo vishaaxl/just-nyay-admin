@@ -1,49 +1,28 @@
 import OrdersTable from "components/Tables/OrdersTable";
 import { db } from "firebase.config";
-import {
-  collection,
-  DocumentData,
-  getDocs,
-  orderBy,
-  query,
-} from "firebase/firestore";
+import { collection, DocumentData, getDocs } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
+
+import styled from "styled-components";
 import { generateUid } from "utils/main";
 
 interface Props {
   users: string;
 }
 
-export const lawyersColumn = [
-  {
-    Header: "Lawyer ID",
-    accessor: "uid" as const, // accessor is the "key" in the data
-  },
-
-  {
-    Header: "Name",
-    accessor: "firstname" as const, // accessor is the "key" in the data
-  },
-  {
-    Header: "Specialization",
-    accessor: "specialization" as const, // accessor is the "key" in the data
-  },
+const usersColumn = [
   {
     Header: "E-mail",
     accessor: "email" as const,
   },
   {
+    Header: "Description",
+    accessor: "description" as const,
+  },
+  {
     Header: "Phone Number",
     accessor: "phoneNumber" as const,
-  },
-  {
-    Header: "City",
-    accessor: "city" as const,
-  },
-  {
-    Header: "experience",
-    accessor: "experience" as const,
   },
 ];
 
@@ -59,21 +38,17 @@ export default function Home({ users }: Props) {
       <OrdersTable
         tableData={JSON.parse(users).map((order: any) => ({
           ...order,
-          uid: generateUid(order.createdAt.seconds * 1000, order.id),
         }))}
-        tableColumns={lawyersColumn}
-        tableName="All Lawyers"
-        path="lawyers"
+        tableColumns={usersColumn}
+        tableName="All Inquiries"
+        path="interns"
       />
     </>
   );
 }
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const usersRef = query(
-    collection(db, "lawyers"),
-    orderBy("createdAt", "desc")
-  );
+  const usersRef = collection(db, "inquiries");
 
   const usersSnap = await getDocs(usersRef);
 

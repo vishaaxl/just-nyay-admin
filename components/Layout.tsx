@@ -3,6 +3,8 @@ import styled from "styled-components";
 // icons
 import {
   MdClose,
+  MdConnectWithoutContact,
+  MdContacts,
   MdDashboard,
   MdLogout,
   MdManageAccounts,
@@ -298,6 +300,12 @@ const options = [
     title: "Bill Order",
     icon: <MdPostAdd className="icon" />,
     link: "/bill",
+  },
+  {
+    id: 5,
+    title: "Inquiries",
+    icon: <MdContacts className="icon" />,
+    link: "/inquiries",
   },
 ];
 
