@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   orderBy,
+  where,
 } from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
@@ -74,6 +75,7 @@ export default function Home({ orders }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const ordersRef = query(
     collection(db, "orders"),
+    where("payment", "==", true),
     orderBy("createdAt", "desc")
   );
 
