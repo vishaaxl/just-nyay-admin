@@ -22,7 +22,7 @@ const SalesCard: React.FC<Props> = ({
       <div className="content">
         <span className="heading">{title}</span>
         <span>{figure}</span>
-        <span>{increase}% increase since last month</span>
+        <span>Click on card to get more info</span>
       </div>
       <div className="icon">{icon}</div>
     </CardWrapper>
