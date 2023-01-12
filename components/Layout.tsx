@@ -9,6 +9,7 @@ import {
   MdLogout,
   MdManageAccounts,
   MdMenu,
+  MdPersonAdd,
   MdPostAdd,
   MdViewList,
 } from "react-icons/md";
@@ -300,6 +301,12 @@ const options = [
     title: "Bill Order",
     icon: <MdPostAdd className="icon" />,
     link: "/bill",
+  },
+  {
+    id: 5,
+    title: "Add Lawyer",
+    icon: <MdPersonAdd className="icon" />,
+    link: "/lawyers/add-new",
   },
   {
     id: 5,

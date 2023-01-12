@@ -1,6 +1,7 @@
-import { DocumentData } from "firebase/firestore";
+import { db } from "firebase.config";
+import { doc, DocumentData, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useGlobalFilter, usePagination, useTable } from "react-table";
 import styled from "styled-components";
 import GlobalFilter from "./Filter";

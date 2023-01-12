@@ -33,8 +33,16 @@ const orderColumn = [
     accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
+    Header: "Name",
+    accessor: "user.firstname" as const, // accessor is the "key" in the data
+  },
+  {
     Header: "Plan",
     accessor: "plan" as const, // accessor is the "key" in the data
+  },
+  {
+    Header: "City",
+    accessor: "user.city" as const, // accessor is the "key" in the data
   },
   {
     Header: "Language",

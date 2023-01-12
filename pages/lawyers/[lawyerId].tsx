@@ -143,7 +143,14 @@ const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
         <span>&#x20b9; 0</span>
       </Total>
       <OrdersTable
-        tableData={JSON.parse(orders)}
+        tableData={JSON.parse(orders).map((order: any) => {
+          return {
+            ...order,
+            firstname: order.user.firstname || "older data",
+            city: order.user.city || "older data",
+            uid: generateUid(order.createdAt.seconds * 1000, order.id),
+          };
+        })}
         tableColumns={orderColumn}
         tableName={`Cases From ${JSON.parse(user).firstname}`}
         path="orders"

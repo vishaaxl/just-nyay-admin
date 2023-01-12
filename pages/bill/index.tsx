@@ -140,7 +140,13 @@ export default function Home() {
           // if there exist already a user
           if (!querySnapshot.empty) {
             addDoc(collection(db, "orders"), {
-              user: querySnapshot.docs[0].id,
+              user: {
+                uid: querySnapshot.docs[0].id,
+                firstname: values.firstname,
+                lastname: values.lastname,
+                city: values.city,
+              },
+
               phoneNumber: `+91${values.phoneNumber.substr(
                 values.phoneNumber.length - 10
               )}`,
@@ -189,7 +195,13 @@ export default function Home() {
           })
             .then((docRef) => {
               addDoc(collection(db, "orders"), {
-                user: docRef.id,
+                user: {
+                  uid: docRef.id,
+                  firstname: values.firstname,
+                  lastname: values.lastname,
+                  city: values.city,
+                },
+
                 phoneNumber: `+91${values.phoneNumber.substr(
                   values.phoneNumber.length - 10
                 )}`,

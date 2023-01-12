@@ -3,7 +3,9 @@ import OrdersTable from "components/Tables/OrdersTable";
 import { db } from "firebase.config";
 import {
   collection,
+  doc,
   DocumentData,
+  getDoc,
   getDocs,
   orderBy,
   query,
@@ -42,8 +44,16 @@ const orderColumn = [
     accessor: "uid" as const, // accessor is the "key" in the data
   },
   {
+    Header: "Name",
+    accessor: "firstname" as const, // accessor is the "key" in the data
+  },
+  {
     Header: "Plan",
     accessor: "plan" as const, // accessor is the "key" in the data
+  },
+  {
+    Header: "City",
+    accessor: "city" as const, // accessor is the "key" in the data
   },
   {
     Header: "Language",
@@ -101,6 +111,8 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
 
   const router = useRouter();
 
+  console.log(JSON.parse(orders));
+
   return (
     <>
       <Head>
@@ -123,10 +135,14 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
       </CardsWrapper>
 
       <OrdersTable
-        tableData={JSON.parse(orders).map((order: any) => ({
-          ...order,
-          uid: generateUid(order.createdAt.seconds * 1000, order.id),
-        }))}
+        tableData={JSON.parse(orders).map((order: any) => {
+          return {
+            ...order,
+            firstname: order.user.firstname || "older data",
+            city: order.user.city || "older data",
+            uid: generateUid(order.createdAt.seconds * 1000, order.id),
+          };
+        })}
         tableColumns={orderColumn}
         tableName="Recent Orders"
         path="orders"
@@ -145,6 +161,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     collection(db, "interns"),
     orderBy("createdAt", "desc")
   );
+
   const ordersRef = query(
     collection(db, "orders"),
     where("payment", "==", true),
@@ -182,10 +199,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     });
   });
 
-  ordersSnap.forEach((doc) => {
+  ordersSnap.forEach(async (docRef) => {
     orders.push({
-      id: doc.id,
-      ...doc.data(),
+      id: docRef.id,
+      ...docRef.data(),
     });
   });
 

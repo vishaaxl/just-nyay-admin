@@ -283,7 +283,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const orderSnap = await getDoc(orderRef);
 
   // get the user who made the offer
-  const userRef = doc(db, "users", orderSnap.data()?.user as string);
+  const userRef = doc(db, "users", orderSnap.data()?.user.uid as string);
   const userSnap = await getDoc(userRef);
 
   // // get the assigned Lawyer
