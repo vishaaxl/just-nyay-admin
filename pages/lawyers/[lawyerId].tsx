@@ -25,6 +25,7 @@ import moment from "moment";
 import { useState } from "react";
 import OrdersTable from "components/Tables/OrdersTable";
 import { generateUid } from "utils/main";
+import { useConfirm } from "material-ui-confirm";
 
 interface Props {
   user: string;
@@ -32,6 +33,7 @@ interface Props {
 }
 
 const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
+  const confirm = useConfirm();
   const [loading, setLoading] = useState(false);
   const [verified, setVerified] = useState(JSON.parse(user).verified);
   const router = useRouter();
@@ -42,18 +44,29 @@ const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
     }
 
     setLoading(true);
-    const docRef = doc(db, "lawyers", JSON.parse(user).id);
-    const data = {
-      verified: !JSON.parse(user).verified,
-    };
 
-    await updateDoc(docRef, data)
-      .then(() => {
-        setLoading(false);
-        setVerified((prev: boolean) => !prev);
+    confirm({
+      title: "Verify Lawyer",
+      description:
+        "Please make sure you have reviewed all the lawyer related information before verifying.",
+    })
+      .then(async () => {
+        const docRef = doc(db, "lawyers", JSON.parse(user).id);
+        const data = {
+          verified: !JSON.parse(user).verified,
+        };
+
+        await updateDoc(docRef, data)
+          .then(() => {
+            setLoading(false);
+            setVerified((prev: boolean) => !prev);
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+          });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
         setLoading(false);
       });
   };
@@ -66,7 +79,15 @@ const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
       </GoBack>
       <Header>
         <span>Active Cases</span>
-        <div style={{ color: "#33D69F", background: "#F3FDF9" }}>
+        <div
+          style={{ color: "#33D69F", background: "#F3FDF9" }}
+          onClick={() =>
+            document &&
+            document.getElementById("active_cases")?.scrollIntoView({
+              behavior: "smooth",
+            })
+          }
+        >
           <BsDot style={{ fontSize: "2rem" }} /> {JSON.parse(orders).length}{" "}
           Active
         </div>
@@ -142,19 +163,21 @@ const LawyerDetails: React.FC<Props> = ({ user, orders }) => {
         <span>Payment Left</span>
         <span>&#x20b9; 0</span>
       </Total>
-      <OrdersTable
-        tableData={JSON.parse(orders).map((order: any) => {
-          return {
-            ...order,
-            firstname: order.user.firstname || "older data",
-            city: order.user.city || "older data",
-            uid: generateUid(order.createdAt.seconds * 1000, order.id),
-          };
-        })}
-        tableColumns={orderColumn}
-        tableName={`Cases From ${JSON.parse(user).firstname}`}
-        path="orders"
-      />
+      <div id="active_cases">
+        <OrdersTable
+          tableData={JSON.parse(orders).map((order: any) => {
+            return {
+              ...order,
+              firstname: order.user.firstname || "older data",
+              city: order.user.city || "older data",
+              uid: generateUid(order.createdAt.seconds * 1000, order.id),
+            };
+          })}
+          tableColumns={orderColumn}
+          tableName={`Cases assigned to ${JSON.parse(user).firstname}`}
+          path="orders"
+        />
+      </div>
     </main>
   );
 };

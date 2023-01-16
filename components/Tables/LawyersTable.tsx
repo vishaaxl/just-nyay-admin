@@ -1,22 +1,27 @@
 import {
   doc,
   DocumentData,
+  getDoc,
   serverTimestamp,
   updateDoc,
 } from "firebase/firestore";
 import { useState } from "react";
 import { useRouter } from "next/router";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { useGlobalFilter, usePagination, useTable } from "react-table";
 import styled from "styled-components";
+import { useConfirm } from "material-ui-confirm";
+
 import GlobalFilter from "./Filter";
 import { db } from "firebase.config";
+import { toast } from "react-toastify";
 
 interface Props {
   tableData: any[];
   tableColumns: any[];
   tableName: string;
   orderId: string;
+  order: DocumentData;
 }
 
 const Lawyers: React.FC<Props> = ({
@@ -24,7 +29,9 @@ const Lawyers: React.FC<Props> = ({
   tableColumns,
   tableName,
   orderId,
+  order,
 }) => {
+  const confirm = useConfirm();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const columns = useMemo(() => tableColumns, [tableColumns]);
@@ -62,19 +69,38 @@ const Lawyers: React.FC<Props> = ({
     setLoading(true);
     const { id } = row;
 
-    const docRef = doc(db, "orders", orderId);
-    const data = {
-      lawyer: id,
-      lawyerAssignedAt: serverTimestamp(),
-    };
+    // get lawyer details
+    const lawyerRef = doc(db, "lawyers", id);
+    const orderRef = doc(db, "orders", orderId);
+    const lawyerSnap = await getDoc(lawyerRef);
 
-    await updateDoc(docRef, data)
-      .then(() => {
-        setLoading(false);
-        router.back();
+    confirm({
+      title: "Assigning Lawyer",
+      description: `Assign ${lawyerSnap.data()?.firstname} (${
+        lawyerSnap.data()?.specialization
+      } specialist) to ${order.user.firstname || "Older data"}'s case`,
+      confirmationText: "Assign",
+    })
+      .then(async () => {
+        const data = {
+          status: "assigned",
+          lawyer: id,
+          lawyerAssignedAt: serverTimestamp(),
+        };
+
+        await updateDoc(orderRef, data)
+          .then(() => {
+            setLoading(false);
+            toast("Assigned successfully", { type: "success" });
+            router.back();
+          })
+          .catch((err) => {
+            console.log(err);
+            setLoading(false);
+          });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch(() => {
+        console.log("aborted");
         setLoading(false);
       });
   };

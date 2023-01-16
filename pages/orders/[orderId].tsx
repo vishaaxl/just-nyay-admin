@@ -184,7 +184,10 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
       <Header onClick={() => router.push(`/allocate/${JSON.parse(order).id}`)}>
         <span>Status</span>
         <div style={{ color: "#FF8F00", background: "#FFF8F0" }}>
-          <BsDot style={{ fontSize: "2rem" }} /> {JSON.parse(order).status}
+          <BsDot style={{ fontSize: "2rem" }} />{" "}
+          {JSON.parse(order).status == "pending"
+            ? "Assing Lawyer"
+            : "Lawyer Assigned"}
         </div>
       </Header>
 
@@ -283,7 +286,12 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const orderSnap = await getDoc(orderRef);
 
   // get the user who made the offer
-  const userRef = doc(db, "users", orderSnap.data()?.user.uid as string);
+
+  const userRef = doc(
+    db,
+    "users",
+    (orderSnap.data()?.user.uid as string) || orderSnap.data()?.user
+  );
   const userSnap = await getDoc(userRef);
 
   // // get the assigned Lawyer

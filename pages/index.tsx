@@ -141,6 +141,7 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
             firstname: order.user.firstname || "older data",
             city: order.user.city || "older data",
             uid: generateUid(order.createdAt.seconds * 1000, order.id),
+            status: order.lawyer ? "Assigned" : "Pending",
           };
         })}
         tableColumns={orderColumn}

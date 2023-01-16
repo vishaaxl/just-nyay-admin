@@ -1,12 +1,19 @@
 import LawyersTable from "components/Tables/LawyersTable";
 import { db } from "firebase.config";
-import { collection, DocumentData, getDocs } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  DocumentData,
+  getDoc,
+  getDocs,
+} from "firebase/firestore";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 
 interface Props {
   users: string;
   orderId: string;
+  order: string;
 }
 
 export const lawyersColumn = [
@@ -17,6 +24,10 @@ export const lawyersColumn = [
   {
     Header: "Name",
     accessor: "firstname" as const, // accessor is the "key" in the data
+  },
+  {
+    Header: "Specialization",
+    accessor: "specialization" as const, // accessor is the "key" in the data
   },
   {
     Header: "E-mail",
@@ -36,7 +47,7 @@ export const lawyersColumn = [
   },
 ];
 
-export default function Home({ users, orderId }: Props) {
+export default function Home({ users, orderId, order }: Props) {
   return (
     <>
       <Head>
@@ -48,8 +59,9 @@ export default function Home({ users, orderId }: Props) {
       <LawyersTable
         tableData={JSON.parse(users)}
         tableColumns={lawyersColumn}
-        tableName="Select Lawyer"
+        tableName="Assign Lawyer to case"
         orderId={orderId}
+        order={JSON.parse(order)}
       />
     </>
   );
@@ -58,6 +70,9 @@ export default function Home({ users, orderId }: Props) {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { orderId } = context.query;
   const usersRef = collection(db, "lawyers");
+
+  const orderRef = doc(db, "orders", orderId as string);
+  const orderSnap = await getDoc(orderRef);
 
   const usersSnap = await getDocs(usersRef);
 
@@ -74,6 +89,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     props: {
       users: JSON.stringify(users),
       orderId,
+      order: JSON.stringify(orderSnap.data()),
     },
   };
 };

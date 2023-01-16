@@ -193,7 +193,15 @@ const UserDetails: React.FC<Props> = ({ user, orders }) => {
       </GoBack>
       <Header>
         <span>Active Cases</span>
-        <div style={{ color: "#33D69F", background: "#F3FDF9" }}>
+        <div
+          style={{ color: "#33D69F", background: "#F3FDF9" }}
+          onClick={() =>
+            document &&
+            document.getElementById("active_cases_cs")?.scrollIntoView({
+              behavior: "smooth",
+            })
+          }
+        >
           <BsDot style={{ fontSize: "2rem" }} /> {JSON.parse(orders).length}{" "}
           Active
         </div>
@@ -236,15 +244,17 @@ const UserDetails: React.FC<Props> = ({ user, orders }) => {
         <span>{getMinutes()}</span>
       </Total>
 
-      <OrdersTable
-        tableData={JSON.parse(orders).map((order: any) => ({
-          ...order,
-          uid: generateUid(order.createdAt.seconds * 1000, order.id),
-        }))}
-        tableColumns={orderColumn}
-        tableName={`Orders From ${JSON.parse(user).firstname}`}
-        path="orders"
-      />
+      <div id="active_cases_cs">
+        <OrdersTable
+          tableData={JSON.parse(orders).map((order: any) => ({
+            ...order,
+            uid: generateUid(order.createdAt.seconds * 1000, order.id),
+          }))}
+          tableColumns={orderColumn}
+          tableName={`Orders From ${JSON.parse(user).firstname}`}
+          path="orders"
+        />
+      </div>
     </main>
   );
 };
@@ -253,7 +263,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const { userId } = context.query;
   const ordersQuery = query(
     collection(db, "orders"),
-    where("user", "==", userId)
+    where("user", "==", userId),
+    where("payment", "==", true)
   );
 
   const ordersSnapShot = await getDocs(ordersQuery);
