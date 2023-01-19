@@ -19,6 +19,7 @@ import {
 import { db } from "firebase.config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { cities } from "data/cities";
 
 const Container = styled.div`
   padding: 2rem 1rem;
@@ -102,25 +103,32 @@ export default function Home() {
           firstname: "",
           lastname: "",
           phoneNumber: "",
-          city: "",
+          city: "Delhi",
           email: "",
           problemType: "Criminal / Property",
           language: "hindi",
           plan: "15",
           date: "",
           time: "9-10",
+          billDescription: "",
+          billPrice: "",
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().required("Required"),
-          lastname: Yup.string().required("Required"),
           phoneNumber: Yup.string().required("Required"),
-          city: Yup.string().required("Required"),
-          email: Yup.string().required("Required"),
           problemType: Yup.string().required("Required"),
           language: Yup.string().required("Required"),
           plan: Yup.string().required("Required"),
           date: Yup.string().required("Required"),
           time: Yup.string().required("Required"),
+          billDescription: Yup.string().when("plan", {
+            is: "other",
+            then: Yup.string().required("Required"),
+          }),
+          billPrice: Yup.string().when("plan", {
+            is: "other",
+            then: Yup.string().required("Required"),
+          }),
         })}
         onSubmit={async (values, { resetForm }) => {
           setLoading(true);
@@ -158,6 +166,8 @@ export default function Home() {
               plan: values.plan,
               time: values.time,
               date: values.date,
+              billDescription: values.billDescription,
+              billPrice: values.billPrice,
               createdAt: serverTimestamp(),
             })
               .then((doc) => {
@@ -211,6 +221,8 @@ export default function Home() {
                 status: "pending",
                 payment: true,
                 plan: values.plan,
+                billDescription: values.billDescription,
+                billPrice: values.billPrice,
                 createdAt: serverTimestamp(),
               })
                 .then((doc) => {
@@ -238,7 +250,7 @@ export default function Home() {
           resetForm();
         }}
       >
-        {() => (
+        {({ values }) => (
           <Form>
             <h4>Personal Details</h4>
             <TwoColumn>
@@ -247,7 +259,14 @@ export default function Home() {
             </TwoColumn>
             <TwoColumn>
               <Input placeholder="Phone Number" name="phoneNumber" />
-              <Input placeholder="City" name="city" />
+              <Input placeholder="City" name="city" component="select">
+                <option disabled>Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </Input>
             </TwoColumn>
             <Input placeholder="E-mail" name="email" />
 
@@ -279,7 +298,19 @@ export default function Home() {
                   {e.title} minutes / Rs.{e.price}
                 </option>
               ))}
+              <option value="other">other</option>
             </Input>
+            {values.plan == "other" && (
+              <>
+                <Input placeholder="Bill Description" name="billDescription" />
+                <Input
+                  placeholder="Price (Rs.)"
+                  name="billPrice"
+                  type="number"
+                />
+              </>
+            )}
+
             <TwoColumn>
               <Input
                 name="date"

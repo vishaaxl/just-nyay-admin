@@ -19,6 +19,7 @@ import {
 import { db } from "firebase.config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
+import { cities } from "data/cities";
 
 const Container = styled.div`
   padding: 2rem 1rem;
@@ -107,7 +108,7 @@ export default function AddLawyer() {
           lastname: "",
           email: "",
           state: "",
-          city: "",
+          city: "Delhi",
           specialization: "Corporate Law",
           experience: "",
           phoneNumber: "",
@@ -193,7 +194,14 @@ export default function AddLawyer() {
             </TwoColumn>
             <TwoColumn>
               <Input placeholder="State" name="state" />
-              <Input placeholder="City" name="city" />
+              <Input placeholder="City" name="city" component="select">
+                <option disabled>Select City</option>
+                {cities.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </Input>
             </TwoColumn>
 
             <Input placeholder="Phone Number" name="phoneNumber" />

@@ -273,10 +273,10 @@ const options = [
     link: "/",
   },
   {
-    id: 2,
-    title: "Customers",
-    icon: <RiFileUserFill className="icon" />,
-    link: "/customers",
+    id: 5,
+    title: "Bill Order",
+    icon: <MdPostAdd className="icon" />,
+    link: "/bill",
   },
   {
     id: 2,
@@ -285,22 +285,17 @@ const options = [
     link: "/orders",
   },
   {
+    id: 2,
+    title: "Customers",
+    icon: <RiFileUserFill className="icon" />,
+    link: "/customers",
+  },
+
+  {
     id: 3,
     title: "Lawyers",
     icon: <SiGooglescholar className="icon" />,
     link: "/lawyers",
-  },
-  {
-    id: 4,
-    title: "Interns",
-    icon: <MdManageAccounts className="icon" />,
-    link: "/interns",
-  },
-  {
-    id: 5,
-    title: "Bill Order",
-    icon: <MdPostAdd className="icon" />,
-    link: "/bill",
   },
   {
     id: 5,
@@ -308,6 +303,13 @@ const options = [
     icon: <MdPersonAdd className="icon" />,
     link: "/lawyers/add-new",
   },
+  {
+    id: 4,
+    title: "Interns",
+    icon: <MdManageAccounts className="icon" />,
+    link: "/interns",
+  },
+
   {
     id: 5,
     title: "Inquiries",
