@@ -270,9 +270,9 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
         <span>Amount Paid</span>
         <span>
           {" "}
-          &#x20b9; {
-            planPrice[JSON.parse(order).plan as keyof typeof planPrice]
-          }{" "}
+          &#x20b9;{" "}
+          {planPrice[JSON.parse(order).plan as keyof typeof planPrice] ||
+            JSON.parse(order).billPrice}{" "}
         </span>
       </Total>
     </main>
