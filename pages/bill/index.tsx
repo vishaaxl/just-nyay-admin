@@ -19,7 +19,7 @@ import {
 import { db } from "firebase.config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { cities } from "data/cities";
+import { states } from "data/states";
 
 const Container = styled.div`
   padding: 2rem 1rem;
@@ -103,7 +103,7 @@ export default function Home() {
           firstname: "",
           lastname: "",
           phoneNumber: "",
-          city: "Delhi",
+          city: "",
           email: "",
           problemType: "Criminal / Property",
           language: "hindi",
@@ -112,6 +112,7 @@ export default function Home() {
           time: "9-10",
           billDescription: "",
           billPrice: "",
+          state: "Delhi",
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().required("Required"),
@@ -152,7 +153,9 @@ export default function Home() {
                 uid: querySnapshot.docs[0].id,
                 firstname: values.firstname,
                 lastname: values.lastname,
-                city: values.city,
+                city:
+                  values.city || states[values.state as keyof typeof states][0],
+                state: values.state,
               },
 
               phoneNumber: `+91${values.phoneNumber.substr(
@@ -209,7 +212,10 @@ export default function Home() {
                   uid: docRef.id,
                   firstname: values.firstname,
                   lastname: values.lastname,
-                  city: values.city,
+                  city:
+                    values.city ||
+                    states[values.state as keyof typeof states][0],
+                  state: values.state,
                 },
 
                 phoneNumber: `+91${values.phoneNumber.substr(
@@ -257,15 +263,32 @@ export default function Home() {
               <Input placeholder="First Name" name="firstname" />
               <Input placeholder="Last Name" name="lastname" />
             </TwoColumn>
+            <Input placeholder="Phone Number" name="phoneNumber" />
             <TwoColumn>
-              <Input placeholder="Phone Number" name="phoneNumber" />
-              <Input placeholder="City" name="city" component="select">
-                <option disabled>Select City</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
+              <Input placeholder="State" name="state" component="select">
+                <option disabled>Select State</option>
+                {Object.keys(states).map((state: string, index: number) => (
+                  <option
+                    value={state}
+                    key={state}
+                    selected={index == 0 && true}
+                  >
+                    {state}
                   </option>
                 ))}
+              </Input>
+              <Input placeholder="City" name="city" component="select">
+                {values.state == "" ? (
+                  <option disabled>Select State to continue</option>
+                ) : (
+                  states[values.state as keyof typeof states].map(
+                    (city: string, index: number) => (
+                      <option value={city} key={city}>
+                        {city}
+                      </option>
+                    )
+                  )
+                )}
               </Input>
             </TwoColumn>
             <Input placeholder="E-mail" name="email" />

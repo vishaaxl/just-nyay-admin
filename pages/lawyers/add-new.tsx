@@ -19,7 +19,7 @@ import {
 import { db } from "firebase.config";
 import { toast } from "react-toastify";
 import { useRouter } from "next/router";
-import { cities } from "data/cities";
+import { states } from "data/states";
 
 const Container = styled.div`
   padding: 2rem 1rem;
@@ -107,8 +107,8 @@ export default function AddLawyer() {
           firstname: "",
           lastname: "",
           email: "",
-          state: "",
-          city: "Delhi",
+          state: "Delhi",
+          city: "",
           specialization: "Corporate Law",
           experience: "",
           phoneNumber: "",
@@ -119,7 +119,6 @@ export default function AddLawyer() {
           email: Yup.string().email().required("Required"),
 
           state: Yup.string().required("Required"),
-          city: Yup.string().required("Required"),
           specialization: Yup.string().required("Required"),
           experience: Yup.number()
             .min(0, "Enter valid experience")
@@ -161,6 +160,7 @@ export default function AddLawyer() {
             ...values,
             verified: true,
             payment: true,
+            city: values.city || states[values.state as keyof typeof states][0],
             createdAt: serverTimestamp(),
             phoneNumber: `+91${values.phoneNumber.substr(
               values.phoneNumber.length - 10
@@ -185,7 +185,7 @@ export default function AddLawyer() {
           resetForm();
         }}
       >
-        {() => (
+        {({ values }) => (
           <Form>
             <h4>Personal Details</h4>
             <TwoColumn>
@@ -193,14 +193,30 @@ export default function AddLawyer() {
               <Input placeholder="Last Name" name="lastname" />
             </TwoColumn>
             <TwoColumn>
-              <Input placeholder="State" name="state" />
-              <Input placeholder="City" name="city" component="select">
-                <option disabled>Select City</option>
-                {cities.map((city) => (
-                  <option key={city} value={city}>
-                    {city}
+              <Input placeholder="State" name="state" component="select">
+                <option disabled>Select State</option>
+                {Object.keys(states).map((state: string, index: number) => (
+                  <option
+                    value={state}
+                    key={state}
+                    selected={index == 0 && true}
+                  >
+                    {state}
                   </option>
                 ))}
+              </Input>
+              <Input placeholder="City" name="city" component="select">
+                {values.state == "" ? (
+                  <option disabled>Select State to continue</option>
+                ) : (
+                  states[values.state as keyof typeof states].map(
+                    (city: string, index: number) => (
+                      <option value={city} key={city}>
+                        {city}
+                      </option>
+                    )
+                  )
+                )}
               </Input>
             </TwoColumn>
 
