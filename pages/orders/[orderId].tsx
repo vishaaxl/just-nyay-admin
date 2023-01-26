@@ -16,6 +16,9 @@ import OrdersTable from "components/Tables/OrdersTable";
 import { lawyersColumn } from "pages/lawyers";
 import { generateUid } from "utils/main";
 
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 interface Props {
   order: string;
   user: string;
@@ -175,6 +178,190 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
     60: "2099",
   };
 
+  const downloadPdf = (orderData: any, userData: any) => {
+    const doc = new jsPDF();
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "JUSTNYAY",
+            styles: {
+              cellPadding: 5,
+              halign: "left",
+              fontSize: 20,
+              textColor: "#ffffff",
+            },
+          },
+          {
+            content: "Invoice",
+            styles: {
+              halign: "right",
+              cellPadding: 5,
+
+              fontSize: 20,
+              textColor: "#ffffff",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+      styles: {
+        fillColor: "#162542",
+      },
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content:
+              "Issued to:" +
+              `\n${userData?.firstname} ${userData?.lastname || ""}` +
+              `\n${userData?.email || ""}` +
+              `\n${userData?.phoneNumber || ""}`,
+            styles: {
+              halign: "left",
+              fontSize: 12,
+            },
+          },
+          {
+            content:
+              "" +
+              "\nOriginal For Customer" +
+              `\nInvoice No: ${generateUid(
+                orderData.createdAt?.seconds * 1000,
+                orderData.id
+              )}` +
+              `\nDate Issued:${moment(
+                orderData.createdAt?.seconds * 1000
+              ).format("MMM Do YY")}`,
+            styles: {
+              halign: "right",
+              fontSize: 12,
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Products & Services",
+            styles: {
+              halign: "left",
+              fontSize: 14,
+              fontStyle: "bold",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      head: [["Description", "Quantity", "Price", "Total"]],
+      body: [
+        [
+          `${orderData.billDescription || "Registration Fee"}`,
+          "1",
+          `Rs.${
+            orderData.billPrice ||
+            planPrice[orderData.plan as keyof typeof planPrice]
+          }`,
+          `Rs.${
+            orderData.billPrice ||
+            planPrice[orderData.plan as keyof typeof planPrice]
+          }`,
+        ],
+      ],
+      theme: "striped",
+      headStyles: {
+        fillColor: "#162542",
+        cellPadding: 2,
+      },
+      styles: {
+        cellPadding: 2,
+      },
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Total amount:",
+            styles: {
+              halign: "right",
+              fontSize: 14,
+              fontStyle: "bold",
+            },
+          },
+          {
+            content: `Rs.${
+              orderData.billPrice ||
+              planPrice[orderData.plan as keyof typeof planPrice]
+            }`,
+            styles: {
+              halign: "right",
+              fontSize: 14,
+              fontStyle: "bold",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "PAYMENT INFO",
+            styles: {
+              halign: "left",
+              fontSize: 14,
+            },
+          },
+        ],
+        [
+          {
+            content:
+              "IDFC Bank" +
+              "\nAccount Name: Advozone India Private Limited" +
+              "\nAccount No: 1010487398" +
+              "\nIFSC Code: IDFB0021331" +
+              "\nBranch: Noida Sector 63 Branch",
+            styles: {
+              halign: "left",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Advozone India Private Limited",
+            styles: {
+              halign: "center",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    return doc.save(
+      generateUid(orderData.createdAt?.seconds * 1000, orderData.id)
+    );
+  };
+
   return (
     <main>
       <GoBack onClick={() => router.back()}>
@@ -202,7 +389,7 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
           <span className="problemType">{JSON.parse(order).problemType}</span>
           <span
             className="link"
-            onClick={() => router.push(`/bill/${JSON.parse(order).id}`)}
+            onClick={() => downloadPdf(JSON.parse(order), JSON.parse(user))}
           >
             Generate Bill
           </span>

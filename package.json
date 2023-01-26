@@ -23,6 +23,7 @@
     "framer-motion": "^7.6.6",
     "html2canvas": "1.4.1",
     "jspdf": "2.5.1",
+    "jspdf-autotable": "^3.5.28",
     "material-ui-confirm": "^3.0.7",
     "moment": "^2.29.4",
     "next": "13.0.3",

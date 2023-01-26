@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { useRef } from "react";
 
 import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 import html2canvas from "html2canvas";
 import { DocumentData } from "firebase/firestore";
 
@@ -133,6 +134,174 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
     });
   };
 
+  const downloadPdf = () => {
+    const doc = new jsPDF();
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "JUSTNYAY",
+            styles: {
+              cellPadding: 5,
+              halign: "left",
+              fontSize: 20,
+              textColor: "#ffffff",
+            },
+          },
+          {
+            content: "Invoice",
+            styles: {
+              halign: "right",
+              cellPadding: 5,
+
+              fontSize: 20,
+              textColor: "#ffffff",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+      styles: {
+        fillColor: "#162542",
+      },
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content:
+              "Issued to:" +
+              `\n${user?.firstname} ${user?.lastname || ""}` +
+              `\n${user?.email || ""}` +
+              `\n${user?.phoneNumber || ""}`,
+            styles: {
+              halign: "left",
+            },
+          },
+          {
+            content:
+              "" +
+              "\nOriginal For Customer" +
+              `\nInvoice No: ${generateUid(
+                order.createdAt?.seconds * 1000,
+                order.id
+              )}` +
+              `\nDate Issued:${moment(order.createdAt?.seconds * 1000).format(
+                "MMM Do YY"
+              )}`,
+            styles: {
+              halign: "right",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Products & Services",
+            styles: {
+              halign: "left",
+              fontSize: 14,
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      head: [["Description", "Quantity", "Price", "Total"]],
+      body: [
+        [
+          `${order.billDescription || "Registration Fee"}`,
+          "1",
+          `Rs.${order.billPrice || prices[order.plan as keyof typeof prices]}`,
+          `Rs.${order.billPrice || prices[order.plan as keyof typeof prices]}`,
+        ],
+      ],
+      theme: "striped",
+      headStyles: {
+        fillColor: "#162542",
+      },
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Total amount:",
+            styles: {
+              halign: "right",
+              fontSize: 14,
+              fontStyle: "bold",
+            },
+          },
+          {
+            content: `Rs.${
+              order.billPrice || prices[order.plan as keyof typeof prices]
+            }`,
+            styles: {
+              halign: "right",
+              fontSize: 14,
+              fontStyle: "bold",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "PAYMENT INFO",
+            styles: {
+              halign: "left",
+              fontSize: 14,
+            },
+          },
+        ],
+        [
+          {
+            content:
+              "IDFC Bank" +
+              "\nAccount Name: Advozone India Private Limited" +
+              "\nAccount No: 1010487398" +
+              "\nIFSC Code: IDFB0021331" +
+              "\nBranch: Noida Sector 63 Branch",
+            styles: {
+              halign: "left",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    autoTable(doc, {
+      body: [
+        [
+          {
+            content: "Advozone India Private Limited",
+            styles: {
+              halign: "center",
+            },
+          },
+        ],
+      ],
+      theme: "plain",
+    });
+
+    return doc.save(generateUid(order.createdAt?.seconds * 1000, order.id));
+  };
+
   const prices = {
     "15": 599,
     "30": 1099,
@@ -228,7 +397,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
         </Content>
       </InvoiceWrapper>
 
-      <Button onClick={() => generatePdf()}>Download Invoice</Button>
+      <Button onClick={() => downloadPdf()}>Download Invoice</Button>
     </Main>
   );
 };
