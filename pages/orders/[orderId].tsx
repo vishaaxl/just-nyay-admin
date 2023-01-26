@@ -357,9 +357,11 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
       theme: "plain",
     });
 
-    let blobPdf = new Blob([doc.output("blob")], { type: "application/pdf" });
-    let blobUrl = URL.createObjectURL(blobPdf);
-    window.open(blobUrl);
+    setTimeout(() => {
+      return doc.save(
+        generateUid(orderData.createdAt?.seconds * 1000, orderData.id)
+      );
+    }, 2000);
   };
 
   return (
