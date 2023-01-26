@@ -299,7 +299,11 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
       theme: "plain",
     });
 
-    return doc.save(generateUid(order.createdAt?.seconds * 1000, order.id));
+    let blobPdf = new Blob([doc.output("blob")], { type: "application/pdf" });
+    let blobUrl = URL.createObjectURL(blobPdf);
+    window.open(blobUrl);
+
+    // return doc.save(generateUid(order.createdAt?.seconds * 1000, order.id));
   };
 
   const prices = {
