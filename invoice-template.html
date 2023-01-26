@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice</title>
+    <style>
+      body {
+        margin-top: 5rem;
+      }
+      html {
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+      }
+
+      .invoice-box {
+        width: 600px;
+        max-width: 800px;
+        margin: auto;
+        padding: 30px;
+        font-size: 16px;
+        line-height: 24px;
+        font-family: "Helvetica Neue", "Helvetica", Helvetica, Arial, sans-serif;
+        color: #555;
+      }
+
+      .invoice-box table {
+        width: 100%;
+        line-height: inherit;
+        text-align: left;
+      }
+
+      .invoice-box table td {
+        padding: 5px;
+        vertical-align: top;
+      }
+
+      /* .invoice-box table tr td:nth-child(2) {
+        text-align: right;
+      } */
+
+      .invoice-box table tr.top table td {
+        padding-bottom: 20px;
+      }
+
+      .invoice-box table tr.top table td.title {
+        font-size: 45px;
+        line-height: 45px;
+        color: #333;
+      }
+
+      .invoice-box table tr.information table td {
+        padding-bottom: 40px;
+      }
+
+      .invoice-box table tr.heading td {
+        background-color: #eee;
+        color: #333;
+
+        padding: 0.5rem;
+        font-weight: 500;
+      }
+
+      .invoice-box table tr.details td {
+        padding-bottom: 20px;
+      }
+
+      .invoice-box table tr.item td {
+        border-bottom: 1px solid #eee;
+        padding: 0.5rem;
+      }
+
+      .invoice-box table tr.item.last td {
+        border-bottom: none;
+      }
+
+      .invoice-box table tr.total td:nth-child(2) {
+        border-top: 2px solid #eee;
+        font-weight: bold;
+      }
+
+      @media only screen and (max-width: 600px) {
+        .invoice-box table tr.top table td {
+          width: 100%;
+          display: block;
+          text-align: center;
+        }
+
+        .invoice-box table tr.information table td {
+          width: 100%;
+          display: block;
+          text-align: center;
+        }
+      }
+
+      /** RTL **/
+      .rtl {
+        direction: rtl;
+        font-family: Tahoma, "Helvetica Neue", "Helvetica", Helvetica, Arial,
+          sans-serif;
+      }
+
+      .rtl table {
+        text-align: right;
+      }
+
+      .rtl table tr td:nth-child(2) {
+        text-align: left;
+      }
+
+      .information {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        margin: 3rem 0;
+      }
+
+      .fade {
+        opacity: 0.9;
+      }
+
+      .heading {
+        font-size: 1.25rem;
+        font-weight: 500;
+        margin-bottom: 1rem;
+      }
+
+      .information span {
+        display: block;
+      }
+
+      .total {
+        font-size: 1.125rem;
+        font-weight: 500;
+        padding-top: 2rem;
+      }
+
+      .title {
+        padding-top: 1rem;
+        font-weight: 700;
+        font-size: 1.125rem;
+      }
+
+      .no-margin {
+        margin: 0 !important;
+      }
+
+      .sign {
+        max-width: 100%;
+        height: 150px;
+        width: 200px;
+        max-width: 300px;
+        object-fit: contain;
+      }
+
+      .center {
+        margin: 4rem 0 0 0;
+        text-align: center;
+      }
+
+      .title-main {
+        background-color: #eee;
+        color: #333;
+        padding: 1rem 0.5rem;
+        font-size: 1.5rem;
+        font-weight: 600;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="invoice-box">
+      <div class="information title-main">
+        <div class="column">JUSTNYAY</div>
+        <div class="column">Invoice</div>
+      </div>
+      <div class="information">
+        <div class="column">
+          <span class="fade">Issued to:</span>
+          <span class="">{{fullname}}</span>
+          <span class="">{{phoneNumber}}</span>
+          <span class="">{{email}}</span>
+        </div>
+        <div class="column">
+          <span></span>
+          <span>Original For Customer </span>
+          <span>Invoice No : {{invoiceId}}</span>
+          <span>Date Issued : {{dateIssued}}</span>
+        </div>
+      </div>
+      <table cellpadding="0" cellspacing="0">
+        <tr class="heading">
+          <td>Description</td>
+          <td>Quantity</td>
+          <td>Price</td>
+          <td>Total</td>
+        </tr>
+
+        <tr class="item">
+          <td>{{description}}</td>
+
+          <td>1</td>
+          <td>Rs.{{price}}</td>
+          <td>Rs.{{price}}</td>
+        </tr>
+      </table>
+      <div class="information no-margin">
+        <div></div>
+        <div>
+          <span class="title">Total Rs.{{price}}</span>
+        </div>
+      </div>
+      <div class="information extra">
+        <div class="column">
+          <span class="heading">PAYMENT INFO</span>
+          <span>IDFC Bank</span>
+          <span>Account Name: Advozone India Private Limited</span>
+          <span>Account No: 1010487398</span>
+          <span>IFSC Code: IDFB0021331</span>
+          <span>Branch: Noida Sector 63 Branch</span>
+        </div>
+        <div class="column">
+          <img
+            src="https://firebasestorage.googleapis.com/v0/b/eshop-a3b91.appspot.com/o/signature.png?alt=media&token=bb768369-30a8-4dc8-a6f2-ad44ad1555af"
+            alt=""
+            class="sign"
+            alt="signature"
+          />
+        </div>
+      </div>
+      <div class="center">Advozone India Private Limited</div>
+    </div>
+  </body>
+</html>
