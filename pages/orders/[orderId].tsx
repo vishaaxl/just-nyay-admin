@@ -18,6 +18,7 @@ import { generateUid } from "utils/main";
 
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { saveAs } from "file-saver";
 
 interface Props {
   order: string;
@@ -357,11 +358,14 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
       theme: "plain",
     });
 
-    setTimeout(() => {
-      return doc.save(
-        generateUid(orderData.createdAt?.seconds * 1000, orderData.id)
-      );
-    }, 2000);
+    let blobPdf = new Blob([doc.output("blob")], { type: "application/pdf" });
+    saveAs(
+      blobPdf,
+      `${generateUid(
+        JSON.parse(order).createdAt.seconds * 1000,
+        JSON.parse(order).id
+      )}.pdf`
+    );
   };
 
   return (
@@ -375,7 +379,7 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
         <div style={{ color: "#FF8F00", background: "#FFF8F0" }}>
           <BsDot style={{ fontSize: "2rem" }} />{" "}
           {JSON.parse(order).status == "pending"
-            ? "Assing Lawyer"
+            ? "Assign Lawyer"
             : "Lawyer Assigned"}
         </div>
       </Header>
