@@ -88,7 +88,8 @@ const Content = styled.div`
 
 const InvoiceWrapper = styled.div<Props>`
   position: relative;
-  width: fit-content;
+  width: 595px;
+  height: 842px;
 `;
 
 const Main = styled.div`
