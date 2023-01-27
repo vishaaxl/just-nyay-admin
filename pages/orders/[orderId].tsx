@@ -433,7 +433,7 @@ const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
           <span
             className="link"
             // onClick={() => generateInvoice(JSON.parse(order), JSON.parse(user))}
-            onClick={() => downloadPdf(JSON.parse(order), JSON.parse(user))}
+            onClick={() => router.push(`/bill/${JSON.parse(order).id}`)}
           >
             Generate Bill
           </span>

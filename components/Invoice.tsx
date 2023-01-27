@@ -401,7 +401,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
         </Content>
       </InvoiceWrapper>
 
-      <Button onClick={() => downloadPdf()}>Download Invoice</Button>
+      <Button onClick={() => generatePdf()}>Download Invoice</Button>
     </Main>
   );
 };
