@@ -108,6 +108,19 @@ const Main = styled.div`
   .primary-btn {
     margin-top: 1rem;
   }
+
+  @media print {
+    &,
+    & * {
+      visibility: visible;
+    }
+    & {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translate(-50%, 0);
+    }
+  }
 `;
 
 const Button = styled.div`
@@ -118,11 +131,14 @@ const Button = styled.div`
   border-radius: 2px;
 
   cursor: pointer;
+
+  @media print {
+    visibility: hidden;
+  }
 `;
 
 const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
-  console.log(order);
-  const invoiceRef = useRef<HTMLDivElement | string>("undefined");
+  const invoiceRef = useRef<HTMLDivElement | null>(null);
 
   const generatePdf = () => {
     // @ts-ignore
@@ -132,6 +148,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
     //   pdf.addImage(img, "JPEG", 0, 0, 595, 842);
     //   pdf.save(generateUid(order.createdAt?.seconds * 1000, order.id));
     // });
+
     window && window.print();
   };
 
