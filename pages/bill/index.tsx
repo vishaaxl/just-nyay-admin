@@ -316,11 +316,7 @@ export default function Home() {
             </TwoColumn>
             <Input placeholder="Plan" name="plan" component="select">
               <option disabled>Select Plan</option>
-              {price_array.map((e) => (
-                <option key={e.id} value={e.title}>
-                  {e.title} minutes / Rs.{e.price}
-                </option>
-              ))}
+              <option value="15">Registration Fee</option>
               <option value="other">other</option>
             </Input>
             {values.plan == "other" && (

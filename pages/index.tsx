@@ -111,8 +111,6 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
 
   const router = useRouter();
 
-  console.log(JSON.parse(orders));
-
   return (
     <>
       <Head>
@@ -142,6 +140,7 @@ export default function Home({ users, lawyers, interns, orders }: Props) {
             city: order.user.city || "older data",
             uid: generateUid(order.createdAt.seconds * 1000, order.id),
             status: order.lawyer ? "Assigned" : "Pending",
+            plan: order.plan == "15" ? "Registration" : order.plan,
           };
         })}
         tableColumns={orderColumn}

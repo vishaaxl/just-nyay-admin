@@ -71,6 +71,7 @@ export default function Home({ orders }: Props) {
         tableData={JSON.parse(orders).map((order: any) => ({
           ...order,
           uid: generateUid(order.createdAt.seconds * 1000, order.id),
+          plan: order.plan == "15" ? "Registration" : order.plan,
         }))}
         tableColumns={orderColumn}
         tableName="All Orders"
