@@ -173,7 +173,27 @@ export default function Home() {
               billPrice: values.billPrice,
               createdAt: serverTimestamp(),
             })
-              .then((doc) => {
+              .then(async (doc) => {
+                await fetch("/api/confirmation", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json",
+                  },
+                  body: JSON.stringify({
+                    phoneNumber: values.phoneNumber.substr(
+                      values.phoneNumber.length - 10
+                    ),
+                  }),
+                })
+                  .then((res) => res.json())
+                  .then((data) => {
+                    console.log(data);
+                    toast("Message sent to user", {
+                      type: "success",
+                    });
+                  })
+                  .catch((err) => console.log(err));
+
                 router.push(`/bill/${doc.id}`);
 
                 // redirect to continue payment and set payment true on successfull transaction
@@ -231,12 +251,31 @@ export default function Home() {
                 billPrice: values.billPrice,
                 createdAt: serverTimestamp(),
               })
-                .then((doc) => {
-                  router.push(`/bill/${doc.id}`);
+                .then(async (doc) => {
+                  await fetch("/api/confirmation", {
+                    method: "POST",
+                    headers: {
+                      "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                      phoneNumber: values.phoneNumber.substr(
+                        values.phoneNumber.length - 10
+                      ),
+                    }),
+                  })
+                    .then((res) => res.json())
+                    .then((data) => {
+                      console.log(data);
+                      toast("Message sent to user", {
+                        type: "success",
+                      });
+                    })
+                    .catch((err) => console.log(err));
                   // redirect to continue payment and set payment true on successfull transaction
                   toast("Added order successfully", {
                     type: "success",
                   });
+                  router.push(`/bill/${doc.id}`);
                   setLoading(false);
                 })
                 .catch((err) => {
