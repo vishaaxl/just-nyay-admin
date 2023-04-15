@@ -8,29 +8,48 @@ export default async function handler(
   if (req.method == "POST") {
     const { phoneNumber } = req.body;
 
-    const encodedParams = new URLSearchParams();
-    encodedParams.set("key", process.env.IVR_KEY as string);
-    encodedParams.set("clientid", process.env.IVR_CLIENT_ID as string);
-    encodedParams.set("phone", phoneNumber);
-    encodedParams.set(
+    const paramsForUser = new URLSearchParams();
+    paramsForUser.set("key", process.env.IVR_KEY as string);
+    paramsForUser.set("clientid", process.env.IVR_CLIENT_ID as string);
+    paramsForUser.set("phone", phoneNumber);
+    paramsForUser.set(
       "message",
-      "Thanks for Calling Just Nyay Please visit www.justnyay.com to book your appointment for the best legal solution or write to us at info@justnyay.com"
+      `ThankYou for purchasing the plan of Rs.599 from Justnyay.com You can access to you dashboard by visiting Justnyay.com/login/user Team Just Nyay`
     );
-    encodedParams.set("senderid", "JUSTNY");
-    encodedParams.set("linkid", "justnay");
-    encodedParams.set("templateid", "1707166989016781621");
+    paramsForUser.set("senderid", "JUSTNY");
+    paramsForUser.set("linkid", "justnay");
+    paramsForUser.set("templateid", "1707167455422356839");
 
-    const url =
-      `https://sms.ivrguru.com/api/v1/sms?` + encodedParams.toString();
+    const paramsForAdmin = new URLSearchParams();
+    paramsForAdmin.set("key", process.env.IVR_KEY as string);
+    paramsForAdmin.set("clientid", process.env.IVR_CLIENT_ID as string);
+    paramsForAdmin.set("phone", "9318428656");
+    paramsForAdmin.set(
+      "message",
+      `Hello Admin, A new purchase of Rs.599 has been made on the website Justnyay.com`
+    );
+    paramsForAdmin.set("senderid", "JUSTNY");
+    paramsForAdmin.set("linkid", "justnay");
+    paramsForAdmin.set("templateid", "1707167480503909442");
+
+    const urlForUser =
+      `https://sms.ivrguru.com/api/v1/sms?` + paramsForUser.toString();
+    const urlForAdmin =
+      `https://sms.ivrguru.com/api/v1/sms?` + paramsForAdmin.toString();
+
+    const urls = [urlForUser, urlForAdmin];
 
     try {
-      await fetch(url)
-        .then((response) => {
-          return res.status(200).send({ response });
+      const responses: any = await Promise.all(
+        urls.map(async (url) => {
+          const response = await fetch(url);
+          return response.json();
         })
-        .catch((err) => {
-          return res.status(500).send({ error: err.message });
-        });
+      ).catch((err) => {
+        return res.status(500).send({ error: err.message });
+      });
+
+      return res.status(200).send({ response: responses });
     } catch (err) {
       return res.status(500).send({ error: "Server error" });
     }
