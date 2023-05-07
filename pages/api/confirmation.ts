@@ -23,7 +23,7 @@ export default async function handler(
     const paramsForAdmin = new URLSearchParams();
     paramsForAdmin.set("key", process.env.IVR_KEY as string);
     paramsForAdmin.set("clientid", process.env.IVR_CLIENT_ID as string);
-    paramsForAdmin.set("phone", "9711383973");
+    paramsForAdmin.set("phone", "9648730321");
     paramsForAdmin.set(
       "message",
       `Hello Admin, A new purchase of Rs.599 has been made on the website Justnyay.com`
