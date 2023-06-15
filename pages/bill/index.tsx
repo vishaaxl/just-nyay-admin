@@ -112,7 +112,7 @@ export default function Home() {
           time: "9-10",
           billDescription: "",
           billPrice: "",
-          state: "Delhi",
+          state: "",
         }}
         validationSchema={Yup.object().shape({
           firstname: Yup.string().required("Required"),
@@ -304,31 +304,8 @@ export default function Home() {
             </TwoColumn>
             <Input placeholder="Phone Number" name="phoneNumber" />
             <TwoColumn>
-              <Input placeholder="State" name="state" component="select">
-                <option disabled>Select State</option>
-                {Object.keys(states).map((state: string, index: number) => (
-                  <option
-                    value={state}
-                    key={state}
-                    selected={index == 0 && true}
-                  >
-                    {state}
-                  </option>
-                ))}
-              </Input>
-              <Input placeholder="City" name="city" component="select">
-                {values.state == "" ? (
-                  <option disabled>Select State to continue</option>
-                ) : (
-                  states[values.state as keyof typeof states].map(
-                    (city: string, index: number) => (
-                      <option value={city} key={city}>
-                        {city}
-                      </option>
-                    )
-                  )
-                )}
-              </Input>
+              <Input placeholder="State" name="state" />
+              <Input placeholder="City" name="city" />
             </TwoColumn>
             <Input placeholder="E-mail" name="email" />
 
