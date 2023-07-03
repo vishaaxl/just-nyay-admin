@@ -28,6 +28,10 @@ const usersColumn = [
     accessor: "email" as const,
   },
   {
+    Header: "Comment",
+    accessor: "description" as const,
+  },
+  {
     Header: "Rating",
     accessor: "feedback.text" as const,
   },
