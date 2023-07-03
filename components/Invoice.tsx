@@ -164,7 +164,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
       <InvoiceWrapper ref={invoiceRef}>
         <Image
           priority
-          src="/images/invoice-bg.png"
+          src="/images/invoice-bg-2.png"
           height={842}
           width={595}
           alt=""
