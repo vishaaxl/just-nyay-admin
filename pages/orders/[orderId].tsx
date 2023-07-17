@@ -172,7 +172,7 @@ const Total = styled.div`
 const OrderDetails: React.FC<Props> = ({ order, user, lawyer }) => {
   const router = useRouter();
   const planPrice = {
-    15: "599",
+    15: "1999",
     30: "1099",
     45: "1599",
     60: "2099",

@@ -153,7 +153,7 @@ const Invoice: React.FC<InvoiceProps> = ({ order, user }) => {
   };
 
   const prices = {
-    "15": 599,
+    "15": 1999,
     "30": 1099,
     "45": 1599,
     "60": 2099,

@@ -14,7 +14,7 @@ export default async function handler(
     paramsForUser.set("phone", phoneNumber);
     paramsForUser.set(
       "message",
-      `ThankYou for purchasing the plan of Rs.599 from Justnyay.com You can access to you dashboard by visiting Justnyay.com/login/user Team Just Nyay`
+      `ThankYou for purchasing the plan of Rs.1999 from Justnyay.com You can access to you dashboard by visiting Justnyay.com/login/user Team Just Nyay`
     );
     paramsForUser.set("senderid", "JUSTNY");
     paramsForUser.set("linkid", "justnay");
@@ -26,7 +26,7 @@ export default async function handler(
     paramsForAdmin.set("phone", "9648730321");
     paramsForAdmin.set(
       "message",
-      `Hello Admin, A new purchase of Rs.599 has been made on the website Justnyay.com`
+      `Hello Admin, A new purchase of Rs.1999 has been made on the website Justnyay.com`
     );
     paramsForAdmin.set("senderid", "JUSTNY");
     paramsForAdmin.set("linkid", "justnay");
