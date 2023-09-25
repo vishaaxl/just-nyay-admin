@@ -71,7 +71,7 @@ const price_array = [
   {
     id: 1,
     title: "15",
-    price: "1999",
+    price: "499",
   },
   {
     id: 2,
